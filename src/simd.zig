@@ -2,7 +2,7 @@ const std = @import("std");
 
 // Pre-normalization using RMSNorm: https://arxiv.org/abs/1910.07467
 pub fn computeRMSNorm(input_data: []const f32, weight_data: []const f32, output_data: []f32) !void {
-    @setFloatMode(.Optimized);
+    @setFloatMode(.optimized);
 
     var scaling_factor = try computeScalarProduct(input_data, input_data);
 
@@ -14,7 +14,7 @@ pub fn computeRMSNorm(input_data: []const f32, weight_data: []const f32, output_
 }
 
 pub fn computeScalarProduct(input_data_1: []const f32, input_data_2: []const f32) !f32 {
-    @setFloatMode(.Optimized);
+    @setFloatMode(.optimized);
 
     std.debug.assert(input_data_1.len == input_data_2.len);
 
@@ -43,7 +43,7 @@ pub fn computeVectorAddition(
     input_data_2: []const f32,
     output_data: []f32,
 ) !void {
-    @setFloatMode(.Optimized);
+    @setFloatMode(.optimized);
 
     std.debug.assert(input_data_1.len == input_data_2.len);
     std.debug.assert(input_data_1.len == output_data.len);
@@ -73,7 +73,7 @@ pub fn computeVectorMultiplication(
     input_data_2: []const f32,
     output_data: []f32,
 ) !void {
-    @setFloatMode(.Optimized);
+    @setFloatMode(.optimized);
 
     std.debug.assert(input_data_1.len == input_data_2.len);
     std.debug.assert(input_data_1.len == output_data.len);

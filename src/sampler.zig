@@ -70,7 +70,7 @@ const ProbabilityIndexPair = struct { probability: f32, index: usize };
 
 // Nucleus sampling: https://arxiv.org/abs/1904.09751
 fn sampleNucleus(self: *Self, probability_distribution: []const f32) usize {
-    @setFloatMode(.Optimized);
+    @setFloatMode(.optimized);
 
     std.debug.assert(probability_distribution.len > 0);
 
@@ -125,7 +125,7 @@ fn lessThan(context: void, lhs: ProbabilityIndexPair, rhs: ProbabilityIndexPair)
 }
 
 fn random(self: *Self) f32 {
-    @setFloatMode(.Optimized);
+    @setFloatMode(.optimized);
 
     return @as(f32, @floatFromInt(self.xorshift() >> 8)) / 16777216;
 }

@@ -79,7 +79,7 @@ pub fn forward(self: Self, layer: usize, position: usize, workers: []Worker) !vo
 
 // Rotary positional embeddings: https://arxiv.org/abs/2104.09864
 fn computeRoPE(self: Self, position: usize, multi_key_data: []f32) void {
-    @setFloatMode(.Optimized);
+    @setFloatMode(.optimized);
 
     const multi_query_data = self.multi_query.data;
 
@@ -115,7 +115,7 @@ fn computeRoPE(self: Self, position: usize, multi_key_data: []f32) void {
 
 // Grouped-query attention: https://arxiv.org/abs/2305.13245v1
 fn computeGQA(self: Self, layer: usize, current_position: usize, head: usize) !void {
-    @setFloatMode(.Optimized);
+    @setFloatMode(.optimized);
 
     const query_data = self.multi_query.data[head * self.head_size ..][0..self.head_size];
 

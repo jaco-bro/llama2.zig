@@ -6,22 +6,17 @@ pub fn build(b: *std.Build) void {
 
     const generator_exe = b.addExecutable(.{
         .name = "llama2-generator",
-        .root_source_file = .{ .path = "src/generator_main.zig" },
+        .root_source_file = b.path("src/generator_main.zig"),
         .target = target,
         .optimize = optimize,
     });
 
     const chat_exe = b.addExecutable(.{
         .name = "llama2-chat",
-        .root_source_file = .{ .path = "src/chat_main.zig" },
+        .root_source_file = b.path("src/chat_main.zig"),
         .target = target,
         .optimize = optimize,
     });
-
-    const build_options = b.addOptions();
-
-    generator_exe.addOptions("build_options", build_options);
-    chat_exe.addOptions("build_options", build_options);
 
     // This declares intent for the executable to be installed into the
     // standard location when the user invokes the "install" step (the default
@@ -53,24 +48,19 @@ pub fn build(b: *std.Build) void {
     // and can be selected like this: `zig build run`
     // This will evaluate the `run` step rather than the default, which is "install".
     const run_generator_step = b.step("run-generator", "Run the generator");
-
     run_generator_step.dependOn(&run_generator_cmd.step);
 
     const run_chat_step = b.step("run-chat", "Run the chat");
-
     run_chat_step.dependOn(&run_chat_cmd.step);
 
     const test_step = b.step("test", "Run unit tests");
 
     const generator_tests = b.addTest(.{
-        .root_source_file = .{ .path = "src/generator_main.zig" },
+        .root_source_file = b.path("src/generator_main.zig"),
         .target = target,
         .optimize = optimize,
     });
 
-    generator_tests.addOptions("build_options", build_options);
-
     const run_tests = b.addRunArtifact(generator_tests);
-
     test_step.dependOn(&run_tests.step);
 }

@@ -17,9 +17,9 @@ pub fn argmax(data: []f32) usize {
 }
 
 pub fn softmax(data: []f32) void {
-    @setFloatMode(.Optimized);
+    @setFloatMode(.optimized);
 
-    var max_element: f32 = std.mem.max(f32, data);
+    const max_element: f32 = std.mem.max(f32, data);
     var sum: f32 = 0;
 
     for (data) |*element| {

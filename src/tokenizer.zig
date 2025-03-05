@@ -16,18 +16,20 @@ pub fn initLeaky(allocator: std.mem.Allocator, model_path: []const u8, vocab_siz
 
     defer file.close();
 
-    const max_word_length = try file.reader().readIntLittle(u32);
+    var reader = file.reader();
+
+    const max_word_length = try reader.readInt(u32, .little);
 
     var vocab = try allocator.alloc([]u8, vocab_size);
-    var word_scores = try allocator.alloc(f32, vocab_size);
+    const word_scores = try allocator.alloc(f32, vocab_size);
 
     for (word_scores, 0..) |*word_score, index| {
-        word_score.* = @bitCast(try file.reader().readIntLittle(u32));
+        word_score.* = @bitCast(try reader.readInt(u32, .little));
 
-        const word_length = try file.reader().readIntLittle(u32);
+        const word_length = try reader.readInt(u32, .little);
         const word = try allocator.alloc(u8, word_length);
 
-        try file.reader().readNoEof(word);
+        try reader.readNoEof(word);
 
         vocab[index] = word;
     }
@@ -41,7 +43,7 @@ pub fn initLeaky(allocator: std.mem.Allocator, model_path: []const u8, vocab_siz
 }
 
 pub fn encode(self: Self, allocator: std.mem.Allocator, text: []const u8) ![]usize {
-    var double_word_buffer = try allocator.alloc(u8, self.max_word_length * 2);
+    const double_word_buffer = try allocator.alloc(u8, self.max_word_length * 2);
 
     defer allocator.free(double_word_buffer);
 
@@ -55,7 +57,7 @@ pub fn encode(self: Self, allocator: std.mem.Allocator, text: []const u8) ![]usi
         merged_tokens = merged_tokens[0 .. merged_tokens.len - 1];
     }
 
-    var merged_tokens_copy: []usize = try allocator.alloc(usize, merged_tokens.len);
+    const merged_tokens_copy: []usize = try allocator.alloc(usize, merged_tokens.len);
 
     @memcpy(merged_tokens_copy, merged_tokens);
 
@@ -173,7 +175,7 @@ fn sortVocab(allocator: std.mem.Allocator, vocab: []const []const u8) ![]VocabEn
         try array.append(VocabEntry{ .word = word, .token = token });
     }
 
-    var slice = try array.toOwnedSlice();
+    const slice = try array.toOwnedSlice();
 
     // sort entries in ascending order
     std.sort.block(VocabEntry, slice, {}, lessThan);

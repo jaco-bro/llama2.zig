@@ -23,7 +23,7 @@ pub fn initLeaky(allocator: std.mem.Allocator, checkpoint: Checkpoint) !Self {
 
 // SwiGLU activation function: https://arxiv.org/abs/2002.05202
 pub fn forward(self: Self, layer: usize, workers: []Worker) !void {
-    @setFloatMode(.Optimized);
+    @setFloatMode(.optimized);
 
     const gate_weight = self.checkpoint.ffn_gate_weights[layer];
     const up_weight = self.checkpoint.ffn_up_weights[layer];
